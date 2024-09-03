@@ -6,24 +6,31 @@
 class Game
 {
 private:
+    Grid grid;
     std::vector<Block> blocks;
+    std::vector<Block> GetAllBlocks();
     Block currentBlock;
     Block nextBlock;
+    Block GetRandomBlock();
     bool IsBlockOutside();
+    bool BlockFits();
+    void MoveBlockLeft();
+    void MoveBlockRight();
     void RotateBlock();
     void LockBlock();
     void Reset();
-    bool BlockFits();
+    void UpdateScore(int linesClear, int moveDownPoints);
+    Sound rotateSound;
+    Sound clearSound;
 
 public:
     Game();
-    Block GetRandomBlock();
-    std::vector<Block> GetAllBlocks();
+    ~Game();
+    int score;
+    int scoreIncrement;
     bool isGameOver;
     void Draw();
     void HandleInput();
-    void MoveBlockLeft();
-    void MoveBlockRight();
     void MoveBlockDown();
-    Grid grid;
+    Music music;
 };

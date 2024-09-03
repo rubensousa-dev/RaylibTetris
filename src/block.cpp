@@ -4,18 +4,17 @@ Block::Block()
 {
     cellSize = 30;
     rotationState = 0;
-    blockOffset = 11;
     color = GetCellColors();
     row_offset = 0;
     col_offset = 0;
 }
 
-void Block::Draw()
+void Block::Draw(int offsetX, int offSetY)
 {
     std::vector<Position> tiles = GetCellPosition();
     for (Position item : tiles)
     {
-        DrawRectangle(item.collumn* cellSize + blockOffset, item.row * cellSize + blockOffset, cellSize - 1, cellSize - 1, color[id] );
+        DrawRectangle(item.collumn* cellSize + offsetX, item.row * cellSize + offSetY, cellSize - 1, cellSize - 1, color[id] );
     }
 }
 void Block::Move(int row, int coll)

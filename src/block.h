@@ -15,7 +15,7 @@ private:
     int col_offset;
 public:
     Block();
-    void Draw();
+    void Draw(int offsetX, int offSetY);
     void Move(int row, int coll);
     int id;
     std::vector<Position> GetCellPosition();

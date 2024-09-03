@@ -3,11 +3,25 @@
 
 Game::Game()
 {
+    score = 0;
+    scoreIncrement = 100;
     grid = Grid();
     isGameOver = false;
     blocks = GetAllBlocks();
     currentBlock = GetRandomBlock();
     nextBlock = GetRandomBlock();
+    InitAudioDevice();
+    music = LoadMusicStream("Sounds/music.mp3");
+    rotateSound = LoadSound("Sounds/rotate.mp3");
+    clearSound = LoadSound("Sounds/clear.mp3");
+    PlayMusicStream(music);
+}
+
+Game::~Game(){
+    UnloadMusicStream(music);
+    UnloadSound(rotateSound);
+    UnloadSound(clearSound);
+    CloseAudioDevice();
 }
 
 Block Game::GetRandomBlock()
@@ -31,7 +45,19 @@ std::vector<Block> Game :: GetAllBlocks()
 void Game::Draw()
 {
     grid.Draw();
-    currentBlock.Draw();
+    currentBlock.Draw(11,11);
+    switch (nextBlock.id)
+    {
+    case 3:
+         nextBlock.Draw(255,290);
+        break;
+    case 4: // O block
+         nextBlock.Draw(255,280);
+        break;
+    default:
+        nextBlock.Draw(270,270);
+        break;
+    }
 }
 
 void Game::HandleInput()
@@ -42,7 +68,6 @@ void Game::HandleInput()
     {
         isGameOver = false;
         Reset();
-
     }
 
     switch (keyPressed)
@@ -55,6 +80,7 @@ void Game::HandleInput()
             break;
         case KEY_DOWN:
             MoveBlockDown();
+            UpdateScore(0,1);
             break;
         case KEY_UP:
             RotateBlock();
@@ -118,6 +144,8 @@ void Game :: RotateBlock()
     if (IsBlockOutside())
     {
         currentBlock.UndoRotation();
+    }else{
+        PlaySound(rotateSound);
     }
 }
 
@@ -137,7 +165,14 @@ void Game::LockBlock()
     }
 
     nextBlock = GetRandomBlock();
-    grid.ClearFullRows();
+    int rowsCleared = grid.ClearFullRows();
+    //grid.ClearFullRows();
+    if (rowsCleared >0)
+    {
+        PlaySound(clearSound);
+        UpdateScore(rowsCleared, 0);    
+    }
+    
 }
 
 void Game::Reset()
@@ -146,6 +181,27 @@ void Game::Reset()
     blocks = GetAllBlocks();
     currentBlock = GetRandomBlock();
     nextBlock = GetRandomBlock();
+    score = 0;
+}
+
+void Game::UpdateScore(int linesClear, int moveDownPoints)
+{
+    switch (linesClear)
+    {
+    case 1:
+        score += scoreIncrement;
+        break;
+    case 2:
+        score += (3*scoreIncrement);
+        break;
+    case 3:
+        score += (5*scoreIncrement);
+        break;
+    default:
+        break;
+    }
+
+    score += moveDownPoints;
 }
 
 bool Game::BlockFits()
