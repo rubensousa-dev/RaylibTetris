@@ -12,11 +12,14 @@ private:
     bool IsBlockOutside();
     void RotateBlock();
     void LockBlock();
+    void Reset();
     bool BlockFits();
+
 public:
     Game();
     Block GetRandomBlock();
     std::vector<Block> GetAllBlocks();
+    bool isGameOver;
     void Draw();
     void HandleInput();
     void MoveBlockLeft();

@@ -8,6 +8,7 @@ Grid::Grid()
     numRows = 20;
     numCols = 10;
     cellSize = 30;
+    gridOffset = 11;
     Initialize();
     colors = GetCellColors();
 }
@@ -60,7 +61,7 @@ void Grid::Draw()
         for (int col = 0; col < numCols; col++)
         {
           int cellValue = grid[row][col];
-          DrawRectangle(col * cellSize + 1, row * cellSize +1 , cellSize -1, cellSize -1, colors[cellValue]);
+          DrawRectangle(col * cellSize + gridOffset, row * cellSize + gridOffset, cellSize -1, cellSize -1, colors[cellValue]);
         }
     }
 }

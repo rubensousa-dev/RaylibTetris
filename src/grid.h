@@ -8,6 +8,7 @@ private:
     int numRows;
     int numCols;
     int cellSize;
+    int gridOffset;
     void ClearRow(int row);
     void MoveRowDown(int row, int numRows);
     std::vector<Color> colors;

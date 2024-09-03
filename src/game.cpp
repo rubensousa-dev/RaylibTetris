@@ -4,6 +4,7 @@
 Game::Game()
 {
     grid = Grid();
+    isGameOver = false;
     blocks = GetAllBlocks();
     currentBlock = GetRandomBlock();
     nextBlock = GetRandomBlock();
@@ -36,6 +37,13 @@ void Game::Draw()
 void Game::HandleInput()
 {
     int keyPressed = GetKeyPressed();
+
+    if (isGameOver && keyPressed == KEY_R)
+    {
+        isGameOver = false;
+        Reset();
+
+    }
 
     switch (keyPressed)
     {
@@ -70,29 +78,38 @@ bool Game::IsBlockOutside()
 
 void Game::MoveBlockLeft()
 {
-    currentBlock.Move(0,-1);
-    if (IsBlockOutside()|| BlockFits() == false)
+    if (!isGameOver)
     {
-        currentBlock.Move(0,1);
+        currentBlock.Move(0,-1);
+        if (IsBlockOutside()|| BlockFits() == false)
+        {
+            currentBlock.Move(0,1);
+        }
     }
 }
 
 void Game::MoveBlockRight()
 {
-    currentBlock.Move(0,1);
-    if (IsBlockOutside()|| BlockFits() == false)
+    if (!isGameOver)
     {
-        currentBlock.Move(0,-1);
+        currentBlock.Move(0,1);
+        if (IsBlockOutside()|| BlockFits() == false)
+        {
+            currentBlock.Move(0,-1);
+        }
     }
 }
 
 void Game::MoveBlockDown()
 {
-    currentBlock.Move(1,0);
-    if (IsBlockOutside() || BlockFits() == false)
+    if (!isGameOver)
     {
-        currentBlock.Move(-1,0);
-        LockBlock();
+        currentBlock.Move(1,0);
+        if (IsBlockOutside() || BlockFits() == false)
+        {
+            currentBlock.Move(-1,0);
+            LockBlock();
+        }
     }
 }
 void Game :: RotateBlock()
@@ -113,8 +130,22 @@ void Game::LockBlock()
         grid.grid[item.row][item.collumn] = currentBlock.id;
     }
     currentBlock = nextBlock;
+
+    if (!BlockFits())
+    {
+        isGameOver = true;
+    }
+
     nextBlock = GetRandomBlock();
     grid.ClearFullRows();
+}
+
+void Game::Reset()
+{
+    grid.Initialize();
+    blocks = GetAllBlocks();
+    currentBlock = GetRandomBlock();
+    nextBlock = GetRandomBlock();
 }
 
 bool Game::BlockFits()

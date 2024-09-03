@@ -9,6 +9,7 @@ class Block
 private:
     int cellSize;
     int rotationState;
+    int blockOffset;
     std::vector<Color> color;
     int row_offset;
     int col_offset;
